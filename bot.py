@@ -98,6 +98,8 @@ def buscar_secciones(periodo, materia, numero):
         # "INGLES TECNICO I - 17223 - INF 111 - 400"
         partes = [p.strip() for p in titulo.split(" - ")]
         campus = re.search(r"([^>\n]+?)\s+Campus", bloque)
+        # "Fechas de Inscripción: Ago 14, 2026 to Oct 07, 2026"
+        inscripcion = re.search(r"Fechas de Inscripci[^<]*</SPAN>\s*[^<]*?\bto\s+([^<]+?)\s*<", bloque, re.I)
         celdas = [limpiar(c) for c in re.findall(r'<td CLASS="dddefault">(.*?)</td>', bloque, re.I | re.S)]
         # Fila de horario: Tipo, Hora, Días, Dónde, Rango, Tipo de horario, Instructores
         hora = celdas[1] if len(celdas) > 1 else ""
@@ -110,6 +112,7 @@ def buscar_secciones(periodo, materia, numero):
             "clave": partes[2] if len(partes) > 2 else f"{materia} {numero}",
             "seccion": partes[3] if len(partes) > 3 else "",
             "campus": campus.group(1).strip() if campus else "",
+            "inscripcion_hasta": inscripcion.group(1).strip() if inscripcion else "",
             "hora": hora,
             "dias": dias,
             "modalidad": modalidad,
@@ -154,10 +157,13 @@ def avisar(texto):
 def mensaje_cupo(s):
     e = html.escape
     lineas = [
-        "🟢 <b>¡Hay cupo!</b>",
+        f"🟢 <b>¡Hay cupo para {e(s['periodo_nombre'])}!</b>",
         f"<b>{e(s['nombre'])}</b> ({e(s['clave'])}-{e(s['seccion'])})",
-        f"{e(s['periodo_nombre'])} · CRN <code>{s['crn']}</code>",
+        f"📅 Mes: <b>{e(s['periodo_nombre'])}</b>",
     ]
+    if s["inscripcion_hasta"]:
+        lineas.append(f"⏳ Inscripción hasta: {e(s['inscripcion_hasta'])}")
+    lineas.append(f"CRN <code>{s['crn']}</code>")
     lugar = " · ".join(x for x in (s["campus"], s["modalidad"]) if x)
     if lugar:
         lineas.append(e(lugar))
