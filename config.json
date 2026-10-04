@@ -1,5 +1,7 @@
 {
   "periodos": "auto",
   "excluir_periodos_que_contengan": ["MASTER"],
-  "materias": []
+  "materias": [
+    { "materia": "ING", "numero": "104", "modalidad": "VIRTUAL", "nota": "Cálculo Vectorial" }
+  ]
 }
