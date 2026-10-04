@@ -1,6 +1,6 @@
 # Bot de cupos Unicaribe
 
-Revisa cada 15 minutos el horario de clases de Conecta y manda un mensaje por Telegram cuando una de las materias de `config.json` tiene cupo disponible.
+Revisa cada 5 minutos el horario de clases de Conecta y manda un mensaje por Telegram cuando una de las materias de `config.json` tiene cupo disponible.
 
 No usa la cuenta del estudiante. Consulta el horario público de Conecta, el mismo que se ve sin iniciar sesión, que ya trae capacidad, inscritos y lugares restantes de cada sección.
 
@@ -40,7 +40,7 @@ En `config.json`:
 5. Sube esta carpeta al repo.
 6. En la pestaña **Actions**, abre "Vigilar cupos" y dale a **Run workflow** para probarlo la primera vez. Después corre solo.
 
-> GitHub no siempre respeta los 15 minutos exactos; a veces se atrasa un poco cuando sus servidores están cargados.
+> GitHub no siempre respeta los 5 minutos exactos; a veces se atrasa un poco cuando sus servidores están cargados.
 
 ## Probar en la PC
 

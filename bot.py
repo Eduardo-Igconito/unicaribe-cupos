@@ -21,6 +21,9 @@ import urllib.request
 from pathlib import Path
 
 BASE = "https://conecta.unicaribe.edu.do/PROD/"
+INSCRIPCION = ("https://inscripcion_de_asignaturas.unicaribe.edu.do/StudentRegistrationSsb/"
+               "ssb/registration/registerPostSignIn?mode=registration")
+POCOS_CUPOS = 3
 CARPETA = Path(__file__).parent
 CONFIG = CARPETA / "config.json"
 ESTADO = CARPETA / "estado.json"
@@ -156,8 +159,13 @@ def avisar(texto):
 
 def mensaje_cupo(s):
     e = html.escape
+    r = s["restante"]
+    if r <= POCOS_CUPOS:
+        cabecera = f"⚠️ <b>¡{'Último cupo' if r == 1 else f'Últimos {r} cupos'} para {e(s['periodo_nombre'])}!</b>"
+    else:
+        cabecera = f"🟢 <b>¡Hay cupo para {e(s['periodo_nombre'])}!</b>"
     lineas = [
-        f"🟢 <b>¡Hay cupo para {e(s['periodo_nombre'])}!</b>",
+        cabecera,
         f"<b>{e(s['nombre'])}</b> ({e(s['clave'])}-{e(s['seccion'])})",
         f"📅 Mes: <b>{e(s['periodo_nombre'])}</b>",
     ]
@@ -172,8 +180,11 @@ def mensaje_cupo(s):
         lineas.append(e(horario))
     if s["profesor"] and s["profesor"] != "PA":
         lineas.append("Prof. " + e(s["profesor"]))
-    lineas.append(f"Quedan <b>{s['restante']}</b> de {s['capacidad']} lugares")
-    lineas.append(f'<a href="{BASE}bwckschd.p_disp_detail_sched?term_in={s["periodo"]}&crn_in={s["crn"]}">Ver en Conecta</a>')
+    lineas.append(f"Queda <b>1</b> de {s['capacidad']} lugares" if r == 1
+                  else f"Quedan <b>{r}</b> de {s['capacidad']} lugares")
+    lineas.append("")
+    lineas.append(f'👉 <a href="{INSCRIPCION}">Inscribirme ahora</a> (pega el CRN en "Enter CRNs")')
+    lineas.append(f'<a href="{BASE}bwckschd.p_disp_detail_sched?term_in={s["periodo"]}&crn_in={s["crn"]}">Ver detalle en Conecta</a>')
     return "\n".join(lineas)
 
 
