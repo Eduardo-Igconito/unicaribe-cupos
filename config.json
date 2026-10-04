@@ -1,8 +1,5 @@
 {
   "periodos": "auto",
   "excluir_periodos_que_contengan": ["MASTER"],
-  "materias": [
-    { "materia": "INF", "numero": "111", "nota": "Inglés Técnico I (ejemplo, cámbialo)" },
-    { "materia": "INF", "numero": "106", "campus": "SANTO DOMINGO", "modalidad": "VIRTUAL" }
-  ]
+  "materias": []
 }

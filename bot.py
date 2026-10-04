@@ -190,6 +190,13 @@ def _lista(valor):
 def main():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     materias = config["materias"]
+    if not materias:
+        print("No hay materias en config.json; no se revisa nada.")
+        return
+    if os.environ.get("GITHUB_ACTIONS") and not (TOKEN and CHATS):
+        # Sin Telegram se guardaría el estado sin avisar a nadie y esos cupos ya no se notificarían.
+        print("::warning::Faltan los secrets TELEGRAM_TOKEN / TELEGRAM_CHAT_ID; no se revisa nada.")
+        return
     primera_vez = not ESTADO.exists()
     anterior = set(json.loads(ESTADO.read_text(encoding="utf-8")).get("con_cupo", [])) if not primera_vez else set()
 
